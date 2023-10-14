@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link href="~/css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <div id="logo">
+                <img src="~/img/logo.png" />
+            </div>
+            <div id="banner">
+                <ul>
+                    <li><a href="~/index">Index</a></li>
+                    <li>
+                        @{
+                            string? getCart = Context.Session.GetString("cart");
+                            if (getCart is not null)
+                            {
+                                var carts = JsonSerializer.Deserialize<List<MyRazorPage.Models.Cart>>(getCart);
+                                int numOfItem = carts.Count;
+                                if (numOfItem > 0)
+                                {
+                                    <a href="~/account/cart">Cart: @numOfItem</a>
+                                }
+                                else
+                                {
+                                    <a href="~/account/cart">Cart: 0</a>
+                                }
+                            }
+                            else
+                            {
+                                <a href="~/account/cart">Cart: 0</a>
+                            }
+                        }
+                    </li>
+                    @if (Context.Session.GetString("account") is null)
+                    {
+                        <li><a href="~/account/signin">SignIn</a></li>
+                        <li><a href="~/account/signup">SignUp</a></li>
+                    }
+                    @if (Context.Session.GetString("account") is not null)
+                    {
+                        <li>
+                            <a href="~/account/profile">Profile</a>
+                        </li>
+                        <li><a href="~/account/signout">SignOut</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/product/product.js" asp-append-version="true"></script>
+</body>
+</html>
+

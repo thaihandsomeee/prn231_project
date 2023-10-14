@@ -1,0 +1,77 @@
+﻿@page
+@model MyRazorPage.Pages.Order.AllOrdersModel
+@{
+}
+<div id="content-left">
+    <h3 style="font-weight: normal;">Welcome, @Model.customer.ContactName</h3>
+    <h3>Account Management</h3>
+    <ul>
+        <a href="~/account/profile">
+        <li>Personal information</li></a>
+    </ul>
+    <h3>My order</h3>
+    <ul>
+        <a href="~/account/profile">
+        <li>All orders</li></a>
+        <a href="~/order/allOrders">
+        <li>Canceled order</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path">LIST ORDERS</b></div>
+    <div class="content-main">
+        <div id="profile-content-order">
+
+            @{
+                foreach (var order in Model.orders)
+                {
+                    <div>
+                        <div class="profile-order-title">
+                            <div class="profile-order-title-left">
+                                <div>Order creation date: @order.OrderDate</div>
+                                <div>Order: <a href="#">@order.OrderId</a></div>
+                            </div>
+                            <div class="profile-order-title-right">
+                                @if (order.RequiredDate is not null)
+                                {
+                                    @if (order.ShippedDate is not null)
+                                    {
+                                        if (order.ShippedDate < DateTime.Now)
+                                        {
+
+                                            <span>Completed</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Delivering</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>Pending</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>Canceled</span>
+                                }
+                                <br /><a asp-page="/account/invoice" asp-route-id= "@order.OrderId">Export invoice</a>
+                            </div>
+                        </div>
+                        @foreach (var item in order.OrderDetails)
+                        {
+                            <div class="profile-order-content" id="@order.OrderId">
+                                <div class="profile-order-content-col1">
+                                    <a href="#"><img src="~/img/2.jpg" width="100%" /></a>
+                                </div>
+                                <div class="profile-order-content-col2">@item.Product.ProductName</div>
+                                <div class="profile-order-content-col3">Quantity: @item.Quantity</div>
+                                <div class="profile-order-content-col4">@item.Product.UnitPrice $</div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

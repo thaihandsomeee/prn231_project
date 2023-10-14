@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link href="~/css/style.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <div id="logo-admin">
+                Ecommerce Admin
+            </div>
+            <div id="banner-admin">
+                <ul>
+                    @if (Context.Session.GetString("account") is not null)
+                    {
+                        <li><a href="~/account/signout">SignOut</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+            @RenderBody()
+        </div>
+        <div id="footer-admin">footer</div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/admin/dashboard.js" asp-append-version="true"></script>
+    <script src="~/js/product/product.js" asp-append-version="true"></script>
+
+</body>
+</html>

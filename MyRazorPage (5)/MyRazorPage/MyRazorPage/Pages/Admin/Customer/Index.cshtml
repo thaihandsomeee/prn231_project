@@ -1,0 +1,105 @@
+﻿@page
+@model MyRazorPage.Pages.Admin.Customer.IndexModel
+@{
+}
+<div id="content-left">
+    <ul>
+        <a href="/admin/dashboard">
+        <li>Dashboard</li></a>
+        <a href="/admin/order">
+        <li>Orders</li></a>
+        <a href="/admin/product/index">
+        <li>Products</li></a>
+        <a href="/admin/customer/index">
+        <li>Customers</li></a>
+        <a href="/admin/employee/index">
+        <li>Employees</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path-admin">CUSTOMERS LIST</b></div>
+    <div class="content-main">
+        <div id="content-main-dashboard">
+            <div id="product-title-header">
+                <div id="product-title-2" style="width: 100%;margin-bottom:50px">
+                    <form method="get">
+                        <input asp-for="@ViewData["txtSearch"]" type="text" name="txtSearch" placeholder="Enter email to search" />
+                        <input type="submit" value="Search" />
+                    </form>
+                </div>
+            </div>
+            <div id="order-table-admin">
+                <table id="orders">
+                    <tr>
+                        <th>#</th>
+                        <th>CustomerID</th>
+                        <th>Email</th>
+                        <th>Company Name</th>
+                        <th>Contact Name</th>
+                        <th>Contact Title</th>
+                        <th>Address</th>
+                        <th></th>
+                    </tr>
+                    @{
+                        if (Model.accounts is not null)
+                        {
+                            foreach (var a in Model.accounts)
+                            {
+                                <tr>
+                                    <td>@a.AccountId</td>
+                                    <td>@a.CustomerId</td>
+                                    <td>@a.Email</td>
+                                    <td>@a.Customer.CompanyName</td>
+                                    <td>@a.Customer.ContactName</td>
+                                    <td>@a.Customer.ContactTitle</td>
+                                    <td>@a.Customer.Address</td>
+                                    <td>
+                                        @if (@a.Status == true)
+                                        {
+                                            <a asp-page="/admin/customer/index" asp-page-handler="active" asp-route-id="@a.AccountId">Inactive</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-page="/admin/customer/index" asp-page-handler="active" asp-route-id="@a.AccountId">Active</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </table>
+            </div>
+            <div id="paging">
+                <div class="pagination">
+                    @if (Model.accounts is not null)
+                    {
+                        @if (Model.accounts.TotalPages > 0)
+                        {
+                            @if (Model.accounts.CurrentPage > 1)
+                            {
+                                <a asp-page="/admin/customer/index" asp-route-pg="1" asp-route-txtSearch="@ViewData["txtSearch"]">&laquo;</a>
+                                <a asp-page="/admin/customer/index" asp-route-pg="@(Model.accounts.CurrentPage-1)" asp-route-txtSearch="@ViewData["txtSearch"]">&lt;</a>
+                            }
+                            @for (var i = Model.accounts.StartPage; i <= Model.accounts.EndPage; i++)
+                            {
+                                if (i == Model.accounts.CurrentPage)
+                                {
+                                    <a class="active" asp-page="/admin/customer/index" asp-route-pg="@i" asp-route-txtSearch="@ViewData["txtSearch"]">@i</a>
+                                }
+                                else
+                                {
+                                    <a asp-page="/admin/customer/index" asp-route-pg="@i" asp-route-txtSearch="@ViewData["txtSearch"]">@i</a>
+                                }
+                            }
+                            @if (Model.accounts.TotalPages > 1 && Model.accounts.CurrentPage < Model.accounts.TotalPages)
+                            {
+                                <a asp-page="/admin/customer/index" asp-route-pg="@(Model.accounts.CurrentPage+1)" asp-route-txtSearch="@ViewData["txtSearch"]">&gt;</a>
+                                <a asp-page="/admin/customer/index" asp-route-pg="@Model.accounts.TotalPages" asp-route-txtSearch="@ViewData["txtSearch"]">&raquo;</a>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

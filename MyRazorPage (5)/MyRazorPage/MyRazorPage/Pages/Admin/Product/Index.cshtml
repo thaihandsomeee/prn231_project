@@ -1,0 +1,186 @@
+﻿@page
+@model MyRazorPage.Pages.Product.ListModel
+@{
+}
+
+<div id="content-left">
+    <ul>
+        <a href="/admin/dashboard">
+        <li>Dashboard</li></a>
+        <a href="/admin/order">
+        <li>Orders</li></a>
+        <a href="/admin/product/index">
+        <li>Products</li></a>
+        <a href="#">
+        <li>Customers</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path-admin">PRODUCTS LIST</b></div>
+    <div class="content-main">
+        <div id="content-main-dashboard">
+            <div id="product-title-header">
+                @if (Model.excelError is null)
+                {
+                    <div id="product-title-1" style="width: 25%;">
+                        <b>Filter by Catetory:</b>
+                        <form method="get">
+                            <select name="ddlCategory">
+                                <option disabled>--- Select ---</option>
+                                @if (Model.categories is not null)
+                                {
+                                    @foreach (var category in Model.categories)
+                                    {
+                                        @if (ViewData["Category"] is not null)
+                                        {
+                                            @if (category.CategoryId == Int32.Parse(ViewData["Category"].ToString()))
+                                            {
+                                                <option value="@category.CategoryId" selected>@category.CategoryName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@category.CategoryId">@category.CategoryName</option>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <option value="@category.CategoryId">@category.CategoryName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            @if (ViewData["Search"] is not null)
+                            {
+                                <input name="txtSearch" asp-for="@ViewData["Search"]" hidden />
+                            }
+                            <input type="submit" value="Filter">
+                        </form>
+                    </div>
+                }
+                @if (Model.excelError is null)
+                {
+                    <div id="product-title-2" style="width: 55%;">
+
+                        <form>
+                            <input name="ddlCategory" asp-for="@ViewData["Category"]" hidden />
+                            @if (ViewData["Search"] is not null)
+                            {
+                                <input type="text" name="txtSearch" placeholder="Enter product name to search" asp-for="@ViewData["Search"]" />
+                            }
+                            else
+                            {
+                                <input type="text" name="txtSearch" placeholder="Enter product name to search" required />
+                            }
+                            <input type="submit" value="Search" />
+                        </form>
+                    </div>
+                }
+                @if (Model.excelError is not null)
+                {
+                    <p style="width: 100%; font-weight:700; color: red">@Model.excelError</p>
+                }
+                <div id="product-title-3" style="width: 20%;">
+                    <a href="/admin/product/create">Create a new Product</a>
+                    <form enctype="multipart/form-data" method="post">
+                        <label for="upload-file">Import .xls or .xlsx file</label>
+                        <input type="file" name="file" id="upload-file" onchange="this.form.submit()" />
+                    </form>
+                </div>
+            </div>
+            @if (Model.excelError is null)
+            {
+                <div id="order-table-admin">
+                    <table id="orders">
+                        <tr>
+                            <th>ProductID</th>
+                            <th>ProductName</th>
+                            <th>UnitPrice</th>
+                            <th>Unit</th>
+                            <th>UnitsInStock</th>
+                            <th>Category</th>
+                            <th>Discontinued</th>
+                            <th></th>
+                        </tr>
+                        @if (Model.products is not null)
+                        {
+                            @foreach (var product in Model.products)
+                            {
+                                <tr>
+                                    <td><a href="#">#@product.ProductId</a></td>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.UnitPrice</td>
+                                    <td>@product.QuantityPerUnit pieces</td>
+                                    <td>@product.UnitsInStock</td>
+                                    @if (product.Category is not null)
+                                    {
+                                        <td>@product.Category.CategoryName</td>
+                                    }
+                                    else
+                                    {
+                                        <td>-</td>
+                                    }
+                                    <td>@product.Discontinued</td>
+                                    <td>
+                                        <a asp-page="/admin/product/delete" asp-route-id="@product.ProductId">Delete</a>
+                                        <a asp-page="/admin/product/update" asp-route-id="@product.ProductId">Edit</a>
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            }
+            <div id="paging">
+                <div class="pagination">
+                    @if (Model.products is not null)
+                    {
+                        @if (Model.products.TotalPages > 0)
+                        {
+                            @if (Model.products.CurrentPage > 1)
+                            {
+                                <a asp-page="/admin/product/index"
+                       asp-route-ddlCategory="@ViewData["Category"]"
+                       asp-route-pg="1"
+                       asp-route-txtSearch="@ViewData["Search"]">&laquo;</a>
+                                <a asp-page="/admin/product/index"
+                       asp-route-ddlCategory="@ViewData["Category"]"
+                       asp-route-pg="@(Model.products.CurrentPage-1)"
+                       asp-route-txtSearch="@ViewData["Search"]">&lt;</a>
+                            }
+                            @for (var i = Model.products.StartPage; i <= Model.products.EndPage; i++)
+                            {
+                                @if (i == Model.products.CurrentPage)
+                                {
+                                    <a class="active" asp-page="/admin/product/index"
+                       asp-route-ddlCategory="@ViewData["Category"]"
+                       asp-route-pg="@i"
+                       asp-route-txtSearch="@ViewData["Search"]">@i</a>
+                                }
+                                else
+                                {
+                                    <a asp-page="/admin/product/index"
+                       asp-route-ddlCategory="@ViewData["Category"]"
+                       asp-route-pg="@i"
+                       asp-route-txtSearch="@ViewData["Search"]">@i</a>
+                                }
+                            }
+                            @if (Model.products.TotalPages > 1 && Model.products.CurrentPage < Model.products.TotalPages)
+                            {
+                                <a asp-page="/admin/product/index"
+                       asp-route-ddlCategory="@ViewData["Category"]"
+                       asp-route-pg="@(Model.products.CurrentPage+1)"
+                       asp-route-txtSearch="@ViewData["Search"]">&gt;</a>
+                                <a asp-page="/admin/product/index"
+                       asp-route-ddlCategory="@ViewData["Category"]"
+                       asp-route-pg="@Model.products.TotalPages"
+                       asp-route-txtSearch="@ViewData["Search"]">&raquo;</a>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

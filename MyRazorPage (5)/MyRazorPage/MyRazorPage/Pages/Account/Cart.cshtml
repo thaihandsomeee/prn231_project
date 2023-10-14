@@ -1,0 +1,96 @@
+﻿@page
+@model MyRazorPage.Pages.Account.CartModel
+@{
+}
+<div id="cart">
+    <div id="cart-title">
+        <h3>SHOPPING CART</h3>
+    </div>
+    <div id="cart-content">
+        <div class="cart-item">
+            @if(Model.carts is not null) {
+                foreach (var cart in Model.carts)
+                {
+                    <div class="cart-item-infor">
+
+                        <div class="cart-item-img">
+                            <img src="~/img/1.jpg" />
+                        </div>
+                        <div class="cart-item-name">
+                            <a href="detail.html?id=1">@cart.Product.ProductName</a>
+                        </div>
+                        <div class="cart-item-price">
+                            @(cart.Product.UnitPrice * cart.Quantity)$
+                        </div>
+                        <div class="cart-item-button">
+                            <a asp-page="/account/cart" asp-page-handler="delete" asp-route-id="@cart.Product.ProductId">X</a>
+                        </div>
+                    </div>
+                    <div class="cart-item-function">
+                        <a asp-page="/account/cart" asp-page-handler="minus" asp-route-id="@cart.Product.ProductId">-</a>
+                        <a asp-page="/account/cart" asp-page-handler="buynow" asp-route-id="@cart.Product.ProductId">+</a>
+                        <input type="text" value="@cart.Quantity" disabled />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div id="cart-summary">
+        <div id="cart-summary-content">Total amount: <span style="color:red">@ViewData["TotalPrice"] $</span></div>
+    </div>
+    <form method="post">
+        <div id="customer-info">
+            <div id="customer-info-content">
+                <h3>CUSTOMER INFORMATION:</h3>
+                @if (Model.customer is not null)
+                {
+                    <div id="customer-info-detail">
+                        <div id="customer-info-detail">
+                            <div id="customer-info-left">
+                                <input type="text" asp-for="customer.CompanyName" readonly /><br />
+                                <input type="text" asp-for="customer.ContactName" readonly /><br />
+                            </div>
+                            <div id="customer-info-right">
+                                <input type="text" asp-for="customer.ContactTitle" readonly /><br />
+                                <input type="text" asp-for="customer.Address" readonly /><br />
+                            </div>
+                        </div>
+                    </div>
+                } else {
+                    <div id="customer-info-detail">
+                        <div id="customer-info-detail">
+                            <div id="customer-info-left">
+                                <input type="text"  asp-for="customer.CompanyName" required /><br />
+                                <input type="text"  asp-for="customer.ContactName" required /><br />
+                            </div>
+                            <div id="customer-info-right">
+                                <input type="text"  asp-for="customer.ContactTitle" required /><br />
+                                <input type="text"  asp-for="customer.Address" required /><br />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="customer-info">
+            <div id="customer-info-content">
+                <h3>PAYMENT METHODS:</h3>
+                <div id="customer-info-payment">
+                    <div>
+                        <input type="radio" name="rbPaymentMethod" checked />
+                        Payment C.O.D - Payment on delivery
+                    </div>
+                    <div>
+                        <input type="radio" name="rbPaymentMethod" disabled />
+                        Payment via online payment gateway
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="cart-order">
+            <form method="post">
+                <input type="submit" value="ORDER" asp-page-handler="Order" />
+            </form>
+        </div>
+    </form>
+</div>

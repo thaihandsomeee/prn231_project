@@ -1,0 +1,145 @@
+﻿@page
+@model MyRazorPage.Pages.Admin.Order.IndexModel
+@{
+}
+
+<div id="content-left">
+    <ul>
+        <a href="/admin/dashboard">
+        <li>Dashboard</li></a>
+        <a href="/admin/order">
+        <li>Orders</li></a>
+        <a href="/admin/product/index">
+        <li>Products</li></a>
+        <a href="#">
+        <li>Customers</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path-admin">ORDERS LIST</b></div>
+    <div class="content-main">
+        <div id="content-main-dashboard">
+            <div id="order-title">
+                @if (TempData["error2"] is not null)
+                {
+                    <p style="color:red; font-weight:700">@TempData["error2"]</p>
+                }
+                <b>Filter by Order date:</b>
+                <form method="get">
+                    From: <input id="start" type="date" name="txtStartOrderDate" asp-for="@ViewData["start"]" required />
+                    To: <input id="end" type="date" name="txtEndOrderDate" asp-for="@ViewData["end"]" required />
+                    <input name="pg" value="@Model.currentPage" hidden/>
+                    <input type="submit" value="Filter">
+                </form>
+                <a asp-page="/admin/order/index" asp-page-handler="clear">Clear form</a>
+                <a asp-page="/admin/order/index" asp-page-handler="export" asp-route-txtStartOrderDate="@ViewData["start"]" asp-route-txtEndOrderDate="@ViewData["end"]">Export to .xls or .xlsx file</a>
+            </div>
+            <div id="order-table">
+                <table id="orders">
+                    <tr>
+                        <th>OrderID</th>
+                        <th>OrderDate</th>
+                        <th>RequiredDate</th>
+                        <th>ShippedDate</th>
+                        <th>Employee</th>
+                        <th>Customer</th>
+                        <th>Freight($)</th>
+                        <th>Status</th>
+                    </tr>
+                    @if(Model.orders is not null) {
+                        @foreach (var order in Model.orders)
+                        {
+                            <tr>
+                                <td><a asp-page="/admin/order/detail" asp-route-id="@order.OrderId" >@order.OrderId</a></td>
+                                <td>@order.OrderDate</td>
+                                @if (order.RequiredDate is not null)
+                                {
+                                    <td>@order.RequiredDate</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                @if (order.RequiredDate is not null)
+                                {
+                                    <td>@order.ShippedDate</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                @if(order.Employee is not null) {
+                                    <td>@order.Employee.FirstName @order.Employee.LastName </td>
+                                } else {
+                                    <td>-</td>
+                                }
+                                @if (order.Customer is not null)
+                                {
+                                    <td>@order.Customer.ContactName</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>@order.Freight</td>
+                                @if(order.RequiredDate is not null) {
+                                    @if (order.ShippedDate < DateTime.Now)
+                                    {
+                                        <td style="color: green;">Completed</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color: blue;">Pending | <a asp-page="/admin/order/cancel" asp-route-id="@order.OrderId">Cancel</a></td>
+                                    }
+                                } else {
+                                    <td style="color: red;">Canceled</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+            <div id="paging">
+                <div class="pagination">
+                    @if (Model.orders is not null)
+                    {
+                        @if (Model.orders.TotalPages > 0)
+                        {
+                            @if (Model.orders.CurrentPage > 1)
+                            {
+                                <a asp-page="/admin/order/index" asp-route-txtStartOrderDate="@ViewData["start"]"
+                                 asp-route-txtEndOrderDate="@ViewData["end"]"
+                                 asp-route-pg="1">&laquo;</a>
+                                <a asp-page="/admin/order/index" asp-route-txtStartOrderDate="@ViewData["start"]"
+                                 asp-route-txtEndOrderDate="@ViewData["end"]"
+                                 asp-route-pg="@(Model.orders.CurrentPage-1)">&lt;</a>
+                            }
+                            @for (var i = Model.orders.StartPage; i <= Model.orders.EndPage; i++)
+                            {
+                                if(i == Model.orders.CurrentPage) {
+                                    <a class="active" asp-page="/admin/order/index" asp-route-txtStartOrderDate="@ViewData["start"]"
+                                    asp-route-txtEndOrderDate="@ViewData["end"]"
+                                    asp-route-pg="@i">@i</a>
+                                } else {
+                                    <a asp-page="/admin/order/index" asp-route-txtStartOrderDate="@ViewData["start"]"
+                                    asp-route-txtEndOrderDate="@ViewData["end"]"
+                                    asp-route-pg="@i">@i</a>
+                                }
+                            }
+                            @if (Model.orders.TotalPages > 1 && Model.orders.CurrentPage < Model.orders.TotalPages)
+                            {
+                                <a asp-page="/admin/order/index" asp-route-txtStartOrderDate="@ViewData["start"]"
+                                 asp-route-txtEndOrderDate="@ViewData["end"]"
+                                asp-route-pg="@(Model.orders.CurrentPage+1)">&gt;</a>
+                                <a asp-page="/admin/order/index" asp-route-txtStartOrderDate="@ViewData["start"]"
+                                asp-route-txtEndOrderDate="@Model.orders.TotalPages"
+                                asp-route-pg="@Model.orders.TotalPages">&raquo;</a>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

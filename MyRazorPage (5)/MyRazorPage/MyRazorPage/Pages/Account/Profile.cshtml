@@ -1,0 +1,51 @@
+﻿@page
+@model MyRazorPage.Pages.Account.ProfileModel
+@{
+}
+<div id="content-left">
+    @if(Model.account is not null) {
+        <h3 style="font-weight: normal;">Welcome, @Model.account.Customer.ContactName</h3>
+    }
+    <h3>Account Management</h3>
+    <ul>
+        <a href="~/account/profile">
+        <li>Personal information</li></a>
+    </ul>
+    <h3>My order</h3>
+    <ul>
+        <a href="~/order/allOrders">
+        <li>All orders</li></a>
+        <a href="#">
+        <li>Canceled order</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path">Personal information</b></div>
+    <div class="content-main">
+        <div id="profile-content">
+            <div class="profile-content-col">
+                @if (Model.account is not null)
+                {
+                    <div>Company name: <br />@Model.account.Customer.CompanyName</div>
+                    <div>Contact name: <br />@Model.account.Customer.ContactName</div>
+                }
+                <div>
+                    <a href="~/account/edit">Edit profile</a>
+                </div>
+            </div>
+            <div class="profile-content-col">
+                @if (Model.account is not null)
+                {
+                    <div>Company title: <br />@Model.account.Customer.ContactTitle</div>
+                    <div>Address: <br />@Model.account.Customer.Address</div>
+                }
+            </div>
+            <div class="profile-content-col">
+                @if (Model.account is not null)
+                {
+                    <div>Email: <br />@Model.account.Email</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@page
+@model MyRazorPage.Pages.IndexModel
+@{
+}
+<div id="content-left">
+    <h3>CATEGORY</h3>
+    <ul>
+        @{
+            if (Model.categories is not null)
+            {
+                foreach (var category in Model.categories)
+                {
+                    if (ViewData["categoryId"] is not null)
+                    {
+                        if ((int)ViewData["categoryId"] == category.CategoryId)
+                        {
+                            <a asp-page="/index" asp-route-id="@category.CategoryId" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@Model.currentPage">
+                            <li class="li-cate-bold">@category.CategoryName</li>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-page="/index" asp-route-id="@category.CategoryId" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@Model.currentPage">
+                            <li>@category.CategoryName</li>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-page="/index" asp-route-id="@category.CategoryId" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@Model.currentPage">
+                        <li>@category.CategoryName</li>
+                        </a>
+                    }
+                }
+            }
+        }
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path">Best Sale</b></div>
+    <div class="content-main">
+        @{
+            foreach(var bestSaleProduct in Model.bestSaleProducts) {
+                <div class="product">
+                    <a asp-page="/product/detail" asp-route-id="@bestSaleProduct.ProductId"><img src="img/1.jpg" width="100%" /></a>
+                    <div class="name"><a asp-page="/product/detail" asp-route-id="@bestSaleProduct.ProductId">@bestSaleProduct.ProductName</a></div>
+                    <div class="price">@bestSaleProduct.UnitPrice</div>
+                    <a asp-page="/account/cart" asp-page-handler="buynow" asp-route-id="@bestSaleProduct.ProductId">Buy Now</a>
+                </div>
+            }
+        }
+    </div>
+    <div class="path">Category: @ViewData["categoryType"]</b></div>
+    <div class="dropdown">
+        <button class="dropbtn">Sort by: @ViewData["SortName"]</button>
+        <div class="dropdown-content">
+            <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="price-asc" asp-route-pg="@Model.currentPage">Price ascending</a>
+            <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="price-desc" asp-route-pg="@Model.currentPage">Price descending</a>
+            <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="name-asc" asp-route-pg="@Model.currentPage">Name ascending</a>
+            <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="name-desc" asp-route-pg="@Model.currentPage">Name descending</a>
+        </div>
+    </div>
+    <div class="content-main">
+        @{
+            foreach (var product in Model.products)
+            {
+                <div class="product">
+                    <a asp-page="/product/detail" asp-route-id="@product.ProductId"><img src="img/1.jpg" width="100%" /></a>
+                    <div class="name"><a asp-page="/product/detail" asp-route-id="@product.ProductId">@product.ProductName</a></div>
+                    <div class="price">@product.UnitPrice</div>
+                    <a asp-page="/account/cart" asp-page-handler="buynow" asp-route-id="@product.ProductId">Buy Now</a>
+                </div>
+            }
+        }
+    </div>
+    <div class="pagination">
+        @if (Model.products.TotalPages > 0)
+        {
+            @if (Model.products.CurrentPage > 1)
+            {
+                <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@(Model.products.CurrentPage-1)">&laquo;</a>
+            }
+            @for (var i = Model.products.StartPage; i <= Model.products.EndPage; i++)
+            {
+                @if (i == Model.products.CurrentPage)
+                {
+                    <a class="active" asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@i">@i</a>
+                }
+                else
+                {
+                    <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@i">@i</a>
+                }
+            }
+            @if (Model.products.TotalPages > 1 && Model.products.CurrentPage < Model.products.TotalPages)
+            {
+                <a asp-page="/index" asp-route-id="@ViewData["categoryId"]" asp-route-sort="@ViewData["SortType"]" asp-route-pg="@(Model.products.CurrentPage+1)">&raquo;</a>
+            }
+        }
+    </div>
+</div>
+
+
+

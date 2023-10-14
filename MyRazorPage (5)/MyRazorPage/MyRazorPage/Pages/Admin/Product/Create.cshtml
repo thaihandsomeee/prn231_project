@@ -1,0 +1,48 @@
+﻿@page
+@model MyRazorPage.Pages.Product.CreateModel
+@{
+}
+<div id="content-left">
+    <ul>
+        <a href="/admin/dashboard">
+        <li>Dashboard</li></a>
+        <a href="/admin/order">
+        <li>Orders</li></a>
+        <a href="/admin/product/index">
+        <li>Products</li></a>
+        <a href="#">
+        <li>Customers</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path-admin">CREATE A NEW PRODUCT</b></div>
+    <div class="content-main">
+        <form id="content-main-product" method="post">
+            <div class="content-main-1">
+                <label>Product name (*):</label><br />
+                <input type="text" asp-for="@Model.product.ProductName"><br />
+                <span class="msg-error" asp-validation-for="@Model.product.ProductName"></span><br />
+                <label>Unit price:</label><br />
+                <input type="text" asp-for="@Model.product.UnitPrice"><br />
+                <label>Quantity per unit:</label><br />
+                <input type="text" asp-for="@Model.product.QuantityPerUnit"><br />
+                <label>Units in stock (*):</label><br />
+                <input type="text" asp-for="@Model.product.UnitsInStock"><br />
+                <span class="msg-error" asp-validation-for="@Model.product.UnitsInStock"></span><br />
+            </div>
+            <div class="content-main-1">
+                <label>Category (*):</label><br />
+                <select asp-for="@Model.product.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <br />
+                <span class="msg-error" asp-validation-for="@Model.product.CategoryId" ></span><br />
+                <label>Reorder level:</label><br />
+                <input type="text" asp-for="@Model.product.ReorderLevel" disabled><br />
+                <label>Units on order:</label><br />
+                <input type="text" asp-for="@Model.product.UnitsOnOrder" disabled><br />
+                <label>Discontinued:</label><br />
+                <input type="checkbox" asp-for="@Model.product.Discontinued" id=""><br />
+                <input type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>

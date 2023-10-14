@@ -1,0 +1,39 @@
+﻿@page
+@model MyRazorPage.Pages.Account.SignUpModel
+@{
+}
+<div id="form">
+    <div id="form-title">
+        <span><a href="~/account/signup" style="color: red;">SIGN UP</a></span>
+        <span><a href="~/account/signin">SIGN IN</a></span>
+    </div>
+    <div id="form-content">
+        <div class="msg-error" style="text-align:left">@ViewData["message"]</div>
+        <form asp-action="" method="post">
+            <input asp-for="customer.CustomerId" value="1" type="hidden" />
+            <label>Company name<span style="color: red;">*</span></label><br />
+            <input type="text" asp-for="customer.CompanyName" /><br />
+            <span class="msg-error" asp-validation-for="customer.CompanyName"></span><br />
+            <label>Contact name<span style="color: red;">*</span></label><br />
+            <input type="text" asp-for="customer.ContactName" /><br />
+            <span class="msg-error" asp-validation-for="customer.ContactName"></span><br />
+            <label>Contact title<span style="color: red;">*</span></label><br />
+            <input type="text" asp-for="customer.ContactTitle" /><br />
+            <span class="msg-error" asp-validation-for="customer.ContactTitle"></span><br />
+            <label>Address<span style="color: red;">*</span></label><br />
+            <input type="text" asp-for="customer.Address" /><br />
+            <span class="msg-error" asp-validation-for="customer.Address" ></span><br />
+            <label>Email<span style="color: red;">*</span></label><br />
+            <input type="text" asp-for="account.Email" /><br />
+            <span class="msg-error" asp-validation-for="account.Email"></span><br />
+            <label>Password<span style="color: red;">*</span></label><br />
+            <input type="password" asp-for="account.Password" /><br />
+            <span class="msg-error" asp-validation-for="account.Password"></span><br />
+            <label>Re-Password<span style="color: red;">*</span></label><br />
+            <input type="password" /><br />
+            <span class="msg-error"></span><br />
+            <div></div>
+            <input type="submit" value="SIGN UP" style="margin-bottom: 30px;" />
+        </form>
+    </div>
+</div>

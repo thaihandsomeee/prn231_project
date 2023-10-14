@@ -1,0 +1,76 @@
+﻿@page
+@model MyRazorPage.Pages.Admin.Order.DetailModel
+@{
+}
+<div id="content-left">
+    <ul>
+        <a href="/admin/dashboard">
+        <li>Dashboard</li></a>
+        <a href="/admin/order">
+        <li>Orders</li></a>
+        <a href="/admin/product/index">
+        <li>Products</li></a>
+        <a href="#">
+        <li>Customers</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path-admin">ORDER DETAIL</b></div>
+    <div class="content-main">
+        <div id="content-main-dashboard">
+            @if (Model.order is not null)
+            {
+                <div>
+                    <div class="profile-order-title">
+                        <div class="profile-order-title-left">
+                            <div>OrderID: @Model.order.OrderId</div>
+                            <div>Order creation date: @Model.order.OrderDate</div>
+                        </div>
+                        <div class="profile-order-title-right">
+                            @if (@Model.order.RequiredDate is not null)
+                            {
+                                @if (@Model.order.ShippedDate < DateTime.Now)
+                                {
+                                    <td style="color: green;">Completed</td>
+                                }
+                                else
+                                {
+                                    <td style="color: blue;">Pending</td>
+                                }
+                            }
+                            else
+                            {
+                                <td style="color: red;">Canceled</td>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.orderDetails is not null)
+                    {
+                        @foreach (var orderDetail in Model.orderDetails)
+                        {
+                            <div class="profile-order-content" style="background-color: white;">
+                                <div class="profile-order-content-col1">
+                                    <!--Todo-->
+                                    <a href="#"><img src="/img/2.jpg" width="100%" /></a>
+                                </div>
+                                @{
+                                    if (orderDetail.Product.ProductName.Contains("/deleted"))
+                                    {
+                                        String[] deletedProduct = orderDetail.Product.ProductName.Split("/");
+                                        <div class="profile-order-content-col2">@deletedProduct[0] (Deleted)</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="profile-order-content-col2">@orderDetail.Product.ProductName</div>
+                                    }
+                                }
+                                <div class="profile-order-content-col3">Quantity: @orderDetail.Quantity</div>
+                                <div class="profile-order-content-col4">@orderDetail.UnitPrice $</div>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
